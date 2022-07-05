@@ -1,0 +1,32 @@
+services:
+  mysql_product:
+    image: mysql:5.7
+    container_name: mysql_product
+    restart: always
+    environment:
+      MYSQL_DATABASE: product
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: super_user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    networks:
+      - back
+
+  product-ms:
+    image: product-ms:0.0.5-SNAPSHOT
+    container_name: product-ms
+    restart: on-failure:10
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "8080:8080"
+    networks:
+      - back
+    depends_on:
+      - "mysql_product"
+
+networks:
+  back:
+    driver: bridge

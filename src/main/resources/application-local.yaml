@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/product?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+
+    username: super_user
+    password: root
+    hikari:
+      idle-timeout: 0
+      max-lifetime: 27264000
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:/script.sql
+
+  jpa:
+    database: MYSQL
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: true
+    generate-ddl: true
+    show-sql: true
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+microservice:
+  security:
+    host: "http://security-module.tmgbr"
+    port: ""
+    authorization:
+      requiredScope: "MS.product"
+    authentication:
+      username: ""
+      password: ""
+      clientId: ""
+      clientSecret: ""
+
+server:
+  port: 8080

@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:product-test
+    username:
+    password:
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: true
+
+product-ms:
+  url: "http://localhost:8080"
+  domaineWine: "DOMAINE CARNEROS"
+  budweiserBeer: "BUDWEISER"
+
+server:
+  port: 8081

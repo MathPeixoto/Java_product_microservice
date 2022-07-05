@@ -1,0 +1,10 @@
+{
+  "name": "test",
+  "id": "PRD000",
+  "price": 0,
+  "category": "BEER",
+  "supplier": {
+    "supplierId": "SUP0000001",
+    "name": "SUPPLIER A"
+  }
+}
