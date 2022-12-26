@@ -45,7 +45,7 @@ public interface ProductController {
       String correlationId, boolean fetchSuppliers, String productId);
 
   /**
-   * Endpoint responsible for updating a in the database.
+   * Endpoint responsible for updating a product in the database.
    *
    * @param correlationId The identifier of each request
    * @param product Type: ProductDto

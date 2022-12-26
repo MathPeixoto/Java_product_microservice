@@ -22,7 +22,7 @@ public interface SupplierRepository extends JpaRepository<SupplierEntity, Intege
   /**
    * Method responsible for retrieving a supplier given a supplierId.
    *
-   * @param supplierId Id of the supplier.
+   * @param supplierId ID of the supplier.
    * @return The founded supplier
    */
   SupplierEntity findBySupplierId(String supplierId);

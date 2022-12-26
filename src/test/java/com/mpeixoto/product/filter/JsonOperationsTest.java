@@ -1,24 +1,20 @@
 package com.mpeixoto.product.filter;
 
-import static com.mpeixoto.product.ReadFile.readFile;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertNull;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mpeixoto.product.exception.JsonPathException;
 import com.mpeixoto.product.web.model.CategoryDto;
 import com.mpeixoto.product.web.model.ProductDto;
 import com.mpeixoto.product.web.model.SupplierDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
-import org.hamcrest.MatcherAssert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static com.mpeixoto.product.ReadFile.readFile;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Class responsible for testing the ConvertObjectToJson class.
@@ -28,8 +24,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class JsonOperationsTest {
   private JsonOperations jsonOperations;
-  /** Rule used for testing exceptions. */
-  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   /** Method responsible for setting the jsonOperations variable. */
   @Before
@@ -58,7 +52,7 @@ public class JsonOperationsTest {
     Bean bean = new Bean();
     bean.value = "test";
     String expectedResult = "{\"value\":\"test\"}";
-    assertThat(jsonOperations.parseToJson(bean), is(expectedResult));
+    assertEquals(jsonOperations.parseToJson(bean), expectedResult);
   }
 
   /**
@@ -78,9 +72,7 @@ public class JsonOperationsTest {
             .supplierDto(supplierDto)
             .build();
 
-    assertThat(
-        jsonOperations.deserialize(readFile("src/test/resources/oracle/jsonBody.json")),
-        is(productDto));
+    assertEquals(jsonOperations.deserialize(readFile("src/test/resources/oracle/jsonBody.json")), productDto);
   }
 
   /**
@@ -89,9 +81,11 @@ public class JsonOperationsTest {
    */
   @Test
   public void deserializeGivenAWrongJsonPathShouldThrowAnJsonPathException() {
-    expectedException.expect(JsonPathException.class);
-    expectedException.expectCause(instanceOf(IOException.class));
+    String jsonPath = "wrong/path";
 
-    jsonOperations.deserialize("wrong/path");
+    assertThatThrownBy(() -> jsonOperations.deserialize(jsonPath))
+            .isInstanceOf(JsonPathException.class)
+            .hasMessage("Wrong json path")
+            .hasCauseInstanceOf(IOException.class);
   }
 }

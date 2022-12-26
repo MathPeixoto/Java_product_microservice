@@ -1,11 +1,8 @@
 package com.mpeixoto.product.persistence.repository;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import com.mpeixoto.product.PojoProvider;
 import com.mpeixoto.product.persistence.domain.ProductEntity;
-import java.util.Collections;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Class responsible for testing if the ProductRepository is working as well as expected.
@@ -46,7 +47,7 @@ public class ProductRepositoryTest {
    */
   @Test
   public void findByProductIdGivenAProductIdShouldReturnARequiredProduct() {
-    assertThat(productRepository.findByProductId(productEntity.getProductId()), is(productEntity));
+    assertEquals(productRepository.findByProductId(productEntity.getProductId()), productEntity);
   }
 
   /**
@@ -54,7 +55,7 @@ public class ProductRepositoryTest {
    */
   @Test
   public void findByNameGivenAProductNameShouldReturnTheProduct() {
-    assertThat(productRepository.findByName("DOMAINE CARNEROS"), is(productEntity));
+    assertEquals(productRepository.findByName("DOMAINE CARNEROS"), productEntity);
   }
 
   /**
@@ -63,8 +64,9 @@ public class ProductRepositoryTest {
    */
   @Test
   public void findAllProductsGivenFiltersShouldReturnAListOfProducts() {
-    assertThat(
-        productRepository.findAllProducts(1, 0).get(),
-        is(Collections.singletonList(productEntity)));
+    List<ProductEntity> productEntityList = productRepository.findAllProducts(1, 0).isPresent()
+        ? productRepository.findAllProducts(1, 0).get()
+        : fail("The list of products is empty");
+    assertEquals(productEntityList, singletonList(productEntity));
   }
 }

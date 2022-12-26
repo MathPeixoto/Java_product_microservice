@@ -15,17 +15,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -45,8 +43,6 @@ public class ProductServiceTest {
   private ProductDto domaineDto;
   private ProductEntity budweiserEntity;
   private ProductService productService;
-  /** Rule used for testing if the expected exceptions is being retrieved. */
-  @Rule public ExpectedException expectedException = ExpectedException.none();
 
   /** Method responsible for setting everything up before each test. */
   @Before
@@ -77,9 +73,9 @@ public class ProductServiceTest {
     final String PRODUCT_ID = "FAIL000000";
 
     when(productRepository.findByProductId(PRODUCT_ID)).thenReturn(null);
-    expectedException.expect(NotFoundException.class);
 
-    productService.updateAProduct(PRODUCT_ID, budweiserDto);
+    assertThatThrownBy(() -> productService.updateAProduct(PRODUCT_ID, budweiserDto))
+        .isInstanceOf(NotFoundException.class);
   }
 
   /**
@@ -102,7 +98,7 @@ public class ProductServiceTest {
     when(productMapper.productEntityToProductDto(budweiserEntityUpdated))
         .thenReturn(budweiserDtoUpdated);
 
-    assertThat(productService.updateAProduct(BUDWEISER_ID, budweiserDto), is(budweiserDtoUpdated));
+    assertEquals(productService.updateAProduct(BUDWEISER_ID, budweiserDto), budweiserDtoUpdated);
   }
 
   /**
@@ -115,8 +111,8 @@ public class ProductServiceTest {
 
     when(productRepository.findByProductId(productId)).thenReturn(null);
 
-    expectedException.expect(NotFoundException.class);
-    productService.retrieveAProduct(false, productId);
+    assertThatThrownBy(() -> productService.retrieveAProduct(false, productId))
+            .isInstanceOf(NotFoundException.class);
   }
 
   /**
@@ -130,7 +126,7 @@ public class ProductServiceTest {
 
     when(productRepository.findByProductId(productId)).thenReturn(budweiserEntity);
 
-    assertThat(productService.retrieveAProduct(false, productId), is(budweiserDto));
+    assertEquals(productService.retrieveAProduct(false, productId), budweiserDto);
   }
 
   /**
@@ -145,7 +141,7 @@ public class ProductServiceTest {
     when(productRepository.findByName(budweiserDto.getName())).thenReturn(budweiserEntity);
     when(productMapper.productEntityToProductDto(budweiserEntity)).thenReturn(budweiserDto);
 
-    assertThat(productService.addProduct(budweiserDto), is(budweiserDto));
+    assertEquals(productService.addProduct(budweiserDto), budweiserDto);
   }
 
   /**
@@ -164,10 +160,10 @@ public class ProductServiceTest {
 
     ProductDto productDto = productService.addProduct(budweiserDto);
 
-    assertThat(productDto.getSupplierDto(), is(budweiserDto.getSupplierDto()));
-    assertThat(productDto.getName(), is(budweiserDto.getName()));
-    assertThat(productDto.getCategory(), is(budweiserDto.getCategory()));
-    assertThat(productDto.getPrice(), is(budweiserDto.getPrice()));
+    assertEquals(productDto.getSupplierDto(), budweiserDto.getSupplierDto());
+    assertEquals(productDto.getName(), budweiserDto.getName());
+    assertEquals(productDto.getCategory(), budweiserDto.getCategory());
+    assertEquals(productDto.getPrice(), budweiserDto.getPrice());
     assertTrue(
         productService
             .addProduct(productDtoArgumentCaptor.getValue())
@@ -192,10 +188,10 @@ public class ProductServiceTest {
 
     ProductDto productDto = productService.addProduct(budweiserDto);
 
-    assertThat(productDto.getSupplierDto(), is(budweiserDto.getSupplierDto()));
-    assertThat(productDto.getName(), is(budweiserDto.getName()));
-    assertThat(productDto.getCategory(), is(budweiserDto.getCategory()));
-    assertThat(productDto.getPrice(), is(budweiserDto.getPrice()));
+    assertEquals(productDto.getSupplierDto(), budweiserDto.getSupplierDto());
+    assertEquals(productDto.getName(), budweiserDto.getName());
+    assertEquals(productDto.getCategory(), budweiserDto.getCategory());
+    assertEquals(productDto.getPrice(), budweiserDto.getPrice());
     assertTrue(
         productService
             .addProduct(productDtoArgumentCaptor.getValue())
@@ -213,7 +209,7 @@ public class ProductServiceTest {
     QueryProduct domaineCarneros =
         QueryProduct.builder().name("DOMAINE CARNEROS").fetchSuppliers(true).build();
 
-    assertThat(productService.retrieveProducts(domaineCarneros), is(productSingletonList));
+    assertEquals(productService.retrieveProducts(domaineCarneros), productSingletonList);
   }
 
   /**
@@ -226,7 +222,7 @@ public class ProductServiceTest {
     QueryProduct budweiser =
         QueryProduct.builder().category(CategoryDto.BEER).fetchSuppliers(true).build();
 
-    assertThat(productService.retrieveProducts(budweiser), is(productSingletonList));
+    assertEquals(productService.retrieveProducts(budweiser), productSingletonList);
   }
 
   /**
@@ -242,7 +238,7 @@ public class ProductServiceTest {
             .fetchSuppliers(true)
             .build();
 
-    assertThat(productService.retrieveProducts(ids), is(productDtoList));
+    assertEquals(productService.retrieveProducts(ids), productDtoList);
   }
 
   /**
@@ -257,7 +253,7 @@ public class ProductServiceTest {
     budweiserDto.setSupplierDto(null);
     domaineDto.setSupplierDto(null);
 
-    assertThat(productService.retrieveProducts(ids), is(productDtoList));
+    assertEquals(productService.retrieveProducts(ids), productDtoList);
   }
 
   /**
@@ -272,7 +268,7 @@ public class ProductServiceTest {
     budweiserDto.setSupplierDto(null);
     domaineDto.setSupplierDto(null);
 
-    assertThat(productService.retrieveProducts(ids), is(productDtoList));
+    assertEquals(productService.retrieveProducts(ids), productDtoList);
   }
 
   /**
@@ -287,6 +283,6 @@ public class ProductServiceTest {
     budweiserDto.setSupplierDto(null);
     domaineDto.setSupplierDto(null);
 
-    assertThat(productService.retrieveProducts(ids), is(productDtoList));
+    assertEquals(productService.retrieveProducts(ids), productDtoList);
   }
 }

@@ -38,7 +38,7 @@ public class ProductDto {
     private SupplierDto supplierDto;
 
     /**
-     * Setter method responsible for defining how the price variable must be serialize.
+     * Setter method responsible for defining how the price variable must be serialized.
      *
      * @param price Type: Double
      */

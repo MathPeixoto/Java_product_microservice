@@ -62,7 +62,7 @@ public class ProductControllerImplTest {
 
   /**
    * Method responsible for testing if the retrieveAProduct controller. The endpoint must return the
-   * product required given its productId and, in case the 'fetchSuppliers' is equal to true, should
+   * product given its productId and, in case the 'fetchSuppliers' is equal to true, should
    * also return its supplier.
    */
   @Test

@@ -1,9 +1,5 @@
 package com.mpeixoto.product.mapper;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
-
 import com.mpeixoto.product.PojoProvider;
 import com.mpeixoto.product.persistence.domain.ProductEntity;
 import com.mpeixoto.product.web.model.ProductDto;
@@ -12,6 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Class responsible for testing the ProductMapper class.
@@ -39,8 +38,6 @@ public class ProductMapperTest {
     ProductEntity budweiserEntity = PojoProvider.getBudweiserEntity();
     ProductDto budweiserDto = PojoProvider.getBudweiserDto();
 
-    assertThat(
-        productMapper.productEntityToProductDto(budweiserEntity),
-        is(budweiserDto));
+    assertEquals(productMapper.productEntityToProductDto(budweiserEntity), budweiserDto);
   }
 }

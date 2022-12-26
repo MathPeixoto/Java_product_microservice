@@ -1,6 +1,5 @@
 package com.mpeixoto.product.web.controller;
 
-import com.mpeixoto.product.exception.AuthorizationException;
 import com.mpeixoto.product.exception.BadRequestException;
 import com.mpeixoto.product.exception.InternalServerErrorException;
 import com.mpeixoto.product.exception.NotFoundException;
@@ -84,29 +83,6 @@ public class ResourceExceptionHandlerController {
                         .timestamp(System.currentTimeMillis())
                         .status(httpStatus.value())
                         .error("Bad Request")
-                        .message(e.getMessage())
-                        .path(request.getRequestURI())
-                        .build();
-        return new ResponseEntity<>(error, httpStatus);
-    }
-
-    /**
-     * Method responsible for handling an exception when unauthorized access is blocked.
-     *
-     * @param e       object of type AuthorizationException. It is the exception that was thrown.
-     * @param request Request that needs to be handled.
-     * @return a ResponseEntity that contains the Standard Error.
-     */
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthorizationException.class)
-    public ResponseEntity<StandardError> unauthorizedException(
-            AuthorizationException e, HttpServletRequest request) {
-        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
-        StandardError error =
-                StandardError.builder()
-                        .timestamp(System.currentTimeMillis())
-                        .status(httpStatus.value())
-                        .error("Unauthorized")
                         .message(e.getMessage())
                         .path(request.getRequestURI())
                         .build();

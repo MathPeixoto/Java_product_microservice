@@ -1,8 +1,5 @@
 package com.mpeixoto.product.persistence.repository;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import com.mpeixoto.product.PojoProvider;
 import com.mpeixoto.product.persistence.domain.SupplierEntity;
 import org.junit.After;
@@ -13,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Class responsible for testing if the SupplierRepository is working as well as expected.
@@ -45,7 +44,7 @@ public class SupplierRepositoryTest {
    */
   @Test
   public void findByNameGivenASupplierNameShouldReturnTheSupplier() {
-    assertThat(supplierRepository.findByName("SUPPLIER A"), is(supplierEntity));
+    assertEquals(supplierRepository.findByName("SUPPLIER A"), supplierEntity);
   }
 
   /**
@@ -54,6 +53,6 @@ public class SupplierRepositoryTest {
    */
   @Test
   public void findBySupplierId() {
-    assertThat(supplierRepository.findBySupplierId("SUP0000001"), is(supplierEntity));
+    assertEquals(supplierRepository.findBySupplierId("SUP0000001"), supplierEntity);
   }
 }

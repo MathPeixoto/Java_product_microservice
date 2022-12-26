@@ -1,5 +1,6 @@
 package com.mpeixoto.product.web.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StandardError implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private Long timestamp;
     private Integer status;

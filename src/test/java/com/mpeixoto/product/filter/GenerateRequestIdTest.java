@@ -1,10 +1,5 @@
 package com.mpeixoto.product.filter;
 
-import static org.hamcrest.core.Is.isA;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
 import javax.servlet.ServletRequestEvent;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.MDC;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Class responsible for testing the GenerateRequestId class.
@@ -41,7 +40,7 @@ public class GenerateRequestIdTest {
   public void requestInitializedGivenNothingShouldPutAStringInMDC() {
     generateRequestId.requestInitialized(servletRequestEvent);
 
-    assertThat(MDC.get("RequestId"), isA(String.class));
+    assertEquals(MDC.get("RequestId").getClass(), String.class);
     assertNotNull(MDC.get("RequestId"));
   }
 

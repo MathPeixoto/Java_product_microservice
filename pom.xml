@@ -8,15 +8,15 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>1.8</java.version>
-        <spring.boot.version>2.6.6</spring.boot.version>
-        <plugin.jacoco.version>0.8.4</plugin.jacoco.version>
+        <java.version>17</java.version>
+        <spring.boot.version>2.7.4</spring.boot.version>
+        <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <sonar.coverage.exclusions>**/com/mpeixoto/product/persistence/domain/*,
             **/com/students/mpeixoto/product/web/model/*,
             **/com/students/mpeixoto/product/exception/*,
             **/com/students/mpeixoto/product/MainProduct.java
         </sonar.coverage.exclusions>
-        <plugin.compiler.version>3.8.1</plugin.compiler.version>
+        <plugin.compiler.version>3.10.1</plugin.compiler.version>
     </properties>
 
     <dependencyManagement>
@@ -126,8 +126,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${plugin.compiler.version}</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>

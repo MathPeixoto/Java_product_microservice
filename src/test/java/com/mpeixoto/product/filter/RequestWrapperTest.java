@@ -1,10 +1,5 @@
 package com.mpeixoto.product.filter;
 
-import static org.hamcrest.Matchers.any;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,11 +7,18 @@ import java.nio.charset.StandardCharsets;
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.hamcrest.Matchers.any;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Class responsible for testing the RequestWrapper class.
@@ -67,18 +69,18 @@ public class RequestWrapperTest {
   /** Method responsible for testing if the ServletInputStream retrieved is the expected. */
   @Test
   public void getInputStreamShouldReturnAServletInputStream() {
-    assertThat(requestWrapper.getInputStream(), is(any(ServletInputStream.class)));
+    MatcherAssert.assertThat(requestWrapper.getInputStream(), Is.is(any(ServletInputStream.class)));
   }
 
   /** Method responsible for testing if the BufferedReader retrieved is the expected. */
   @Test
   public void getReaderShouldReturnABufferedReader() {
-    assertThat(requestWrapper.getReader(), is(any(BufferedReader.class)));
+    MatcherAssert.assertThat(requestWrapper.getReader(), is(any(BufferedReader.class)));
   }
 
   /** Method responsible for testing if the String retrieved is the expected. */
   @Test
   public void getBodyShouldReturnTheBodyOfTheRequest() {
-    assertThat(requestWrapper.getBody(), is(BODY));
+    assertEquals(BODY, requestWrapper.getBody());
   }
 }

@@ -15,11 +15,12 @@ import com.mpeixoto.product.web.model.SupplierDto;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
+
+import static java.util.Comparator.comparing;
 
 /**
  * Class responsible for being the intermediary between the verifyIfProductsAreSold endpoint and the
@@ -140,7 +141,7 @@ public class ProductService {
     List<ProductDto> productDtoList =
         productEntityList.stream()
             .map(productMapper::productEntityToProductDto)
-            .collect(Collectors.toList());
+            .toList();
 
     fetchSuppliers(fetchSuppliers, productDtoList);
     productDtoList = sortList(sort, productDtoList);
@@ -166,39 +167,20 @@ public class ProductService {
 
   private List<ProductDto> productsFilter(
       Predicate<ProductDto> predicate, List<ProductDto> productDtoList) {
-    return productDtoList.stream().filter(predicate).collect(Collectors.toList());
+    return productDtoList.stream().filter(predicate).toList();
   }
 
   private List<ProductDto> sortList(String sort, List<ProductDto> productDtoList) {
-    final Comparator<ProductDto> productDtoComparatorName =
-        Comparator.comparing(ProductDto::getName);
-    final Comparator<ProductDto> productDtoComparatorPrice =
-        Comparator.comparing(ProductDto::getPrice);
+    final Comparator<ProductDto> productDtoComparatorName = comparing(ProductDto::getName);
+    final Comparator<ProductDto> productDtoComparatorPrice = comparing(ProductDto::getPrice);
     final Stream<ProductDto> productDtoStream = productDtoList.stream();
-    final List<ProductDto> productDtos;
 
-    switch (sort.toLowerCase()) {
-      case "desc.price":
-        productDtos =
-            productDtoStream
-                .sorted(productDtoComparatorPrice.reversed())
-                .collect(Collectors.toList());
-        break;
-      case "asc.price":
-        productDtos =
-            productDtoStream.sorted(productDtoComparatorPrice).collect(Collectors.toList());
-        break;
-      case "desc.name":
-        productDtos =
-            productDtoStream
-                .sorted(productDtoComparatorName.reversed())
-                .collect(Collectors.toList());
-        break;
-      default:
-        productDtos =
-            productDtoStream.sorted(productDtoComparatorName).collect(Collectors.toList());
-    }
-    return productDtos;
+    return switch (sort.toLowerCase()) {
+      case "desc.price" -> productDtoStream.sorted(productDtoComparatorPrice.reversed()).toList();
+      case "asc.price" -> productDtoStream.sorted(productDtoComparatorPrice).toList();
+      case "desc.name" -> productDtoStream.sorted(productDtoComparatorName.reversed()).toList();
+      default -> productDtoStream.sorted(productDtoComparatorName).toList();
+    };
   }
 
   private void fetchSuppliers(boolean fetchSuppliers, List<ProductDto> productDtoList) {
@@ -209,20 +191,16 @@ public class ProductService {
 
   private String generateProductId() {
     String idNumber = RandomStringUtils.randomNumeric(Integer.parseInt(RANGE_OF_RANDOM_NUMERIC));
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("PRD").append(idNumber);
-    return stringBuilder.toString();
+    return "PRD" + idNumber;
   }
 
   private String generateSupplierId() {
     String idNumber = RandomStringUtils.randomNumeric(Integer.parseInt(RANGE_OF_RANDOM_NUMERIC));
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append("SUP").append(idNumber);
-    return stringBuilder.toString();
+    return "SUP" + idNumber;
   }
 
   private SupplierEntity checkSupplier(SupplierDto supplierDto) {
-    SupplierEntity supplierEntity = null;
+    SupplierEntity supplierEntity;
     if (supplierDto.getSupplierId() == null) { // searching by a name
       supplierEntity = supplierRepository.findByName(supplierDto.getName());
       if (supplierEntity == null) { // searching by a supplier that does not exist in database
@@ -231,7 +209,7 @@ public class ProductService {
             .name(supplierDto.getName())
             .build();
       }
-    } else if (supplierDto.getSupplierId() != null) { // searching by a SupplierId
+    } else { // searching by a SupplierId
       return supplierRepository.findBySupplierId(supplierDto.getSupplierId());
     }
     return supplierEntity;
