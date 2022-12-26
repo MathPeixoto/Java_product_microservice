@@ -1,9 +1,5 @@
 package com.mpeixoto.product.web.controller;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
 import com.mpeixoto.product.PojoProvider;
 import com.mpeixoto.product.services.ProductService;
 import com.mpeixoto.product.web.model.ProductDto;
@@ -19,6 +15,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 // TODO make the tests comparing by json path, not by the object retrieved.
 /**
  * Class responsible for testing if the ProductControllerImpl class is working as expected.
@@ -29,7 +28,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ActiveProfiles("test")
 public class ProductControllerImplTest {
-  private static final String TOKEN = "test token";
   private static final String CORRELATION_ID = "2";
   private ProductDto domaineDto;
   private ProductDto budweiserDto;
@@ -55,11 +53,11 @@ public class ProductControllerImplTest {
 
     when(productService.updateAProduct(BUDWEISER_ID, budweiserDto)).thenReturn(budweiserDtoUpdated);
 
-    assertThat(
+    assertEquals(
         productController
-            .updateAProduct(CORRELATION_ID, TOKEN, budweiserDto, BUDWEISER_ID)
+            .updateAProduct(CORRELATION_ID, budweiserDto, BUDWEISER_ID)
             .getBody(),
-        is(budweiserDtoUpdated));
+        budweiserDtoUpdated);
   }
 
   /**
@@ -73,9 +71,9 @@ public class ProductControllerImplTest {
 
     when(productService.retrieveAProduct(true, productId)).thenReturn(budweiserDto);
 
-    assertThat(
-        productController.retrieveAProduct(CORRELATION_ID, TOKEN, true, productId).getBody(),
-        is(budweiserDto));
+    assertEquals(
+        productController.retrieveAProduct(CORRELATION_ID, true, productId).getBody(),
+        budweiserDto);
   }
 
   /**
@@ -90,9 +88,9 @@ public class ProductControllerImplTest {
 
     when(productService.addProduct(productDto)).thenReturn(budweiserDto);
 
-    assertThat(
-        productController.addProduct(CORRELATION_ID, TOKEN, productDto).getBody(),
-        is(budweiserDto));
+    assertEquals(
+        productController.addProduct(CORRELATION_ID, productDto).getBody(),
+        (budweiserDto));
   }
 
   /**
@@ -106,8 +104,8 @@ public class ProductControllerImplTest {
 
     when(productService.retrieveProducts(queryProduct)).thenReturn(productDtoList);
 
-    assertThat(
-        productController.retrieveProducts(CORRELATION_ID, TOKEN, queryProduct).getBody(),
-        is(productDtoList));
+    assertEquals(
+        productController.retrieveProducts(CORRELATION_ID, queryProduct).getBody(),
+        productDtoList);
   }
 }

@@ -26,7 +26,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class MissingRequestHeaderFilter extends OncePerRequestFilter {
     private final JsonOperations jsonOperations;
     private static final String CORRELATION_ID = "X-Correlation-Id";
-    private static final String AUTHORIZATION = "Authorization";
 
     /**
      * Method responsible for setting the beans.
@@ -49,8 +48,7 @@ public class MissingRequestHeaderFilter extends OncePerRequestFilter {
             MDC.put(CORRELATION_ID, requestCorrelationId);
         }
 
-        if (!Strings.isBlank(request.getHeader(CORRELATION_ID))
-                && !Strings.isBlank(request.getHeader(AUTHORIZATION))) {
+        if (!Strings.isBlank(requestCorrelationId)) {
             filterChain.doFilter(request, response);
         } else {
             log.error(

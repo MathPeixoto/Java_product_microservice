@@ -49,9 +49,7 @@ public class MissingRequestHeaderFilterTest {
     @Test
     public void doFilterInternalGivenValidHeadersShouldPass() throws ServletException, IOException {
         String correlationId = "test correlation-id";
-        String authorization = "test token";
         when(request.getHeader("X-Correlation-Id")).thenReturn(correlationId);
-        when(request.getHeader("Authorization")).thenReturn(authorization);
 
         missingRequestHeaderFilter.doFilterInternal(request, response, filterChain);
         verify(filterChain, times(1)).doFilter(request, response);
@@ -85,31 +83,8 @@ public class MissingRequestHeaderFilterTest {
     @Test
     public void doFilterInternalGivenInvalidCorrelationIdAndAValidAuthorizationsShouldNotPass()
             throws ServletException, IOException {
-        String authorization = "test token";
 
         when(request.getHeader("X-Correlation-Id")).thenReturn(null);
-        when(request.getHeader("Authorization")).thenReturn(authorization);
-        when(response.getWriter()).thenReturn(printWriter);
-
-        missingRequestHeaderFilter.doFilterInternal(request, response, filterChain);
-        verify(response, times(1)).setStatus(HttpStatus.BAD_REQUEST.value());
-        verify(printWriter, times(1)).write(anyString());
-    }
-
-    /**
-     * Method responsible for testing the 'doFilterInternal' method with invalid authorization and a
-     * valid correlationId.
-     *
-     * @throws ServletException Is thrown when an error occurs with the request or response.
-     * @throws IOException      Is thrown when an I/O operation occurs
-     */
-    @Test
-    public void doFilterInternalGivenValidCorrelationIdAndAnInvalidAuthorizationsShouldNotPass()
-            throws ServletException, IOException {
-        String correlationId = "1";
-
-        when(request.getHeader("X-Correlation-Id")).thenReturn(correlationId);
-        when(request.getHeader("Authorization")).thenReturn(null);
         when(response.getWriter()).thenReturn(printWriter);
 
         missingRequestHeaderFilter.doFilterInternal(request, response, filterChain);

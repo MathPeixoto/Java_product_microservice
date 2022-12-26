@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class ProductControllerImpl implements ProductController {
   private static final String X_CORRELATION_ID = "X-Correlation-Id";
-  private static final String AUTHORIZATION = "Authorization";
   private final ProductService productService;
 
   /**
@@ -45,7 +44,6 @@ public class ProductControllerImpl implements ProductController {
   @GetMapping("/")
   public ResponseEntity<List<ProductDto>> retrieveProducts(
       @RequestHeader(X_CORRELATION_ID) String correlationId,
-      @RequestHeader(AUTHORIZATION) String token,
       QueryProduct queryProduct) {
     log.debug("Correlation id: {} entered in retrieveProducts endpoint", correlationId);
     return new ResponseEntity<>(productService.retrieveProducts(queryProduct), HttpStatus.OK);
@@ -55,7 +53,6 @@ public class ProductControllerImpl implements ProductController {
   @PostMapping("/")
   public ResponseEntity<ProductDto> addProduct(
       @RequestHeader(X_CORRELATION_ID) String correlationId,
-      @RequestHeader(AUTHORIZATION) String token,
       @RequestBody ProductDto product) {
     return new ResponseEntity<>(productService.addProduct(product), HttpStatus.OK);
   }
@@ -64,7 +61,6 @@ public class ProductControllerImpl implements ProductController {
   @GetMapping("/{product-id}")
   public ResponseEntity<ProductDto> retrieveAProduct(
       @RequestHeader(X_CORRELATION_ID) String correlationId,
-      @RequestHeader(AUTHORIZATION) String token,
       @RequestParam(name = "fetch-suppliers", defaultValue = "false") boolean fetchSuppliers,
       @PathVariable("product-id") String productId) {
     return new ResponseEntity<>(
@@ -75,7 +71,6 @@ public class ProductControllerImpl implements ProductController {
   @PutMapping("/{product-id}")
   public ResponseEntity<ProductDto> updateAProduct(
       @RequestHeader(X_CORRELATION_ID) String correlationId,
-      @RequestHeader(AUTHORIZATION) String token,
       @RequestBody ProductDto product,
       @PathVariable("product-id") String productId) {
     return new ResponseEntity<>(productService.updateAProduct(productId, product), HttpStatus.OK);
