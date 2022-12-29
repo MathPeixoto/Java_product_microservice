@@ -1,8 +1,8 @@
 package com.mpeixoto.product.filter;
 
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
 import java.util.UUID;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;

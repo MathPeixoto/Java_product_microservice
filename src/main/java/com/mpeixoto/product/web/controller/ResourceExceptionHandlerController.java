@@ -4,7 +4,7 @@ import com.mpeixoto.product.exception.BadRequestException;
 import com.mpeixoto.product.exception.InternalServerErrorException;
 import com.mpeixoto.product.exception.NotFoundException;
 import com.mpeixoto.product.web.model.StandardError;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,6 +1,6 @@
 package com.mpeixoto.product.filter;
 
-import javax.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
