@@ -1,32 +1,66 @@
+version: '3'
+
+networks:
+  back:
+    driver: bridge
+
+volumes:
+  postgres_data:
+      driver: local
+
 services:
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: password
+
+  keycloak:
+      image: quay.io/keycloak/keycloak:legacy
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: Pa55w0rd
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+        #JDBC_PARAMS: "ssl=true"
+      ports:
+        - 9080:8080
+      depends_on:
+        - postgres
+
   mysql_product:
-    image: mysql:5.7
-    container_name: mysql_product
-    restart: always
-    environment:
-      MYSQL_DATABASE: product
-      MYSQL_ROOT_USER: root
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: super_user
-      MYSQL_PASSWORD: root
-    ports:
-      - "3306:3306"
-    networks:
-      - back
+      image: mysql:5.7
+      container_name: mysql_product
+      restart: always
+      environment:
+        MYSQL_DATABASE: product
+        MYSQL_ROOT_USER: root
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: super_user
+        MYSQL_PASSWORD: root
+      ports:
+        - "3306:3306"
+      networks:
+        - back
 
   product-ms:
     image: product-ms:0.0.5-SNAPSHOT
     container_name: product-ms
     restart: on-failure:10
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+        SPRING_PROFILES_ACTIVE: dev
     ports:
       - "8080:8080"
     networks:
       - back
+
     depends_on:
       - "mysql_product"
-
-networks:
-  back:
-    driver: bridge

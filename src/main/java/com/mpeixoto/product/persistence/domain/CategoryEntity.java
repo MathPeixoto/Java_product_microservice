@@ -6,8 +6,12 @@ package com.mpeixoto.product.persistence.domain;
  * @author mpeixoto
  */
 public enum CategoryEntity {
-  /** Wine. */
-  WINE,
-  /** Beer. */
-  BEER
+    /**
+     * Wine.
+     */
+    WINE,
+    /**
+     * Beer.
+     */
+    BEER
 }

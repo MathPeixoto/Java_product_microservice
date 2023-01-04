@@ -22,15 +22,3 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5Dialect
-
-microservice:
-  security:
-    host: "http://security-module_sandbox"
-    port: ":7050"
-    authorization:
-      requiredScope: "MS.product"
-    authentication:
-      username: ""
-      password: ""
-      clientId: ""
-      clientSecret: ""

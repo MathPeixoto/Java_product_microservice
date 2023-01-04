@@ -6,8 +6,12 @@ package com.mpeixoto.product.web.model;
  * @author mpeixoto
  */
 public enum CategoryDto {
-  /** Wine. */
-  WINE,
-  /** Beer. */
-  BEER
+    /**
+     * Wine.
+     */
+    WINE,
+    /**
+     * Beer.
+     */
+    BEER
 }

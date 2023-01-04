@@ -19,25 +19,30 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ProductMapperTest {
-  @Mock private SupplierMapper supplierMapper;
-  private ProductMapper productMapper;
+    @Mock
+    private SupplierMapper supplierMapper;
+    private ProductMapper productMapper;
 
-  /** Method responsible for setting everything up before each test. */
-  @Before
-  public void setUp() {
-    productMapper = new ProductMapper(supplierMapper);
+    /**
+     * Method responsible for setting everything up before each test.
+     */
+    @Before
+    public void setUp() {
+        productMapper = new ProductMapper(supplierMapper);
 
-    when(supplierMapper.supplierEntityToSupplierDto(
-            PojoProvider.getBudweiserEntity().getSupplierEntity()))
-        .thenReturn(PojoProvider.getBudweiserDto().getSupplierDto());
-  }
+        when(supplierMapper.supplierEntityToSupplierDto(
+                PojoProvider.getBudweiserEntity().getSupplierEntity()))
+                .thenReturn(PojoProvider.getBudweiserDto().getSupplierDto());
+    }
 
-  /** Method responsible for testing the productEntityToProductDto given a productEntity. */
-  @Test
-  public void productEntityToProductDtoGivenAProductEntityShouldReturnAProductDto() {
-    ProductEntity budweiserEntity = PojoProvider.getBudweiserEntity();
-    ProductDto budweiserDto = PojoProvider.getBudweiserDto();
+    /**
+     * Method responsible for testing the productEntityToProductDto given a productEntity.
+     */
+    @Test
+    public void productEntityToProductDtoGivenAProductEntityShouldReturnAProductDto() {
+        ProductEntity budweiserEntity = PojoProvider.getBudweiserEntity();
+        ProductDto budweiserDto = PojoProvider.getBudweiserDto();
 
-    assertEquals(productMapper.productEntityToProductDto(budweiserEntity), budweiserDto);
-  }
+        assertEquals(productMapper.productEntityToProductDto(budweiserEntity), budweiserDto);
+    }
 }

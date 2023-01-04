@@ -34,255 +34,262 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
-  @Mock private ProductRepository productRepository;
-  @Mock private SupplierRepository supplierRepository;
-  @Mock private ProductMapper productMapper;
-  @Mock private SupplierMapper supplierMapper;
-  @Captor private ArgumentCaptor<ProductDto> productDtoArgumentCaptor;
-  private ProductDto budweiserDto;
-  private ProductDto domaineDto;
-  private ProductEntity budweiserEntity;
-  private ProductService productService;
+    @Mock
+    private ProductRepository productRepository;
+    @Mock
+    private SupplierRepository supplierRepository;
+    @Mock
+    private ProductMapper productMapper;
+    @Mock
+    private SupplierMapper supplierMapper;
+    @Captor
+    private ArgumentCaptor<ProductDto> productDtoArgumentCaptor;
+    private ProductDto budweiserDto;
+    private ProductDto domaineDto;
+    private ProductEntity budweiserEntity;
+    private ProductService productService;
 
-  /** Method responsible for setting everything up before each test. */
-  @Before
-  public void setUp() {
-    domaineDto = PojoProvider.getDomaineDto();
-    budweiserDto = PojoProvider.getBudweiserDto();
-    budweiserEntity = PojoProvider.getBudweiserEntity();
-    productService =
-        new ProductService(productRepository, productMapper, supplierRepository, supplierMapper);
-    QueryProduct queryProduct = QueryProduct.builder().build();
-    ProductEntity domaineEntity = PojoProvider.getDomaineEntity();
-    Optional<List<ProductEntity>> productList =
-        Optional.of(Arrays.asList(domaineEntity, budweiserEntity));
+    /**
+     * Method responsible for setting everything up before each test.
+     */
+    @Before
+    public void setUp() {
+        domaineDto = PojoProvider.getDomaineDto();
+        budweiserDto = PojoProvider.getBudweiserDto();
+        budweiserEntity = PojoProvider.getBudweiserEntity();
+        productService =
+                new ProductService(productRepository, productMapper, supplierRepository, supplierMapper);
+        QueryProduct queryProduct = QueryProduct.builder().build();
+        ProductEntity domaineEntity = PojoProvider.getDomaineEntity();
+        Optional<List<ProductEntity>> productList =
+                Optional.of(Arrays.asList(domaineEntity, budweiserEntity));
 
-    when(productRepository.findAllProducts(queryProduct.getLimit(), queryProduct.getOffset()))
-        .thenReturn(productList);
-    when(productMapper.productEntityToProductDto(domaineEntity)).thenReturn(domaineDto);
-    when(productMapper.productEntityToProductDto(budweiserEntity)).thenReturn(budweiserDto);
-  }
+        when(productRepository.findAllProducts(queryProduct.getLimit(), queryProduct.getOffset()))
+                .thenReturn(productList);
+        when(productMapper.productEntityToProductDto(domaineEntity)).thenReturn(domaineDto);
+        when(productMapper.productEntityToProductDto(budweiserEntity)).thenReturn(budweiserDto);
+    }
 
-  /**
-   * Method responsible for testing if the NotFoundException is being thrown when a required product
-   * isn't founded.
-   */
-  @Test
-  public void
-      updateAProductGivenAProductIdOfAProductThatDoesNotExistShouldThrowANotFoundException() {
-    final String PRODUCT_ID = "FAIL000000";
+    /**
+     * Method responsible for testing if the NotFoundException is being thrown when a required product
+     * isn't founded.
+     */
+    @Test
+    public void
+    updateAProductGivenAProductIdOfAProductThatDoesNotExistShouldThrowANotFoundException() {
+        final String PRODUCT_ID = "FAIL000000";
 
-    when(productRepository.findByProductId(PRODUCT_ID)).thenReturn(null);
+        when(productRepository.findByProductId(PRODUCT_ID)).thenReturn(null);
 
-    assertThatThrownBy(() -> productService.updateAProduct(PRODUCT_ID, budweiserDto))
-        .isInstanceOf(NotFoundException.class);
-  }
+        assertThatThrownBy(() -> productService.updateAProduct(PRODUCT_ID, budweiserDto))
+                .isInstanceOf(NotFoundException.class);
+    }
 
-  /**
-   * Method responsible for testing if the 'updateAProduct' is updating the required product as
-   * expected.
-   */
-  @Test
-  public void updateAProductGivenAProductIdShouldReturnTheProductUpdated() {
-    final String BUDWEISER_ID = budweiserDto.getProductId();
-    ProductEntity budweiserEntityUpdated = PojoProvider.getBudweiserEntity();
-    budweiserEntityUpdated.setName("BUDWEISER UPDATED");
-    ProductDto budweiserDtoUpdated = PojoProvider.getBudweiserDto();
-    budweiserDtoUpdated.setName("BUDWEISER UPDATED");
+    /**
+     * Method responsible for testing if the 'updateAProduct' is updating the required product as
+     * expected.
+     */
+    @Test
+    public void updateAProductGivenAProductIdShouldReturnTheProductUpdated() {
+        final String BUDWEISER_ID = budweiserDto.getProductId();
+        ProductEntity budweiserEntityUpdated = PojoProvider.getBudweiserEntity();
+        budweiserEntityUpdated.setName("BUDWEISER UPDATED");
+        ProductDto budweiserDtoUpdated = PojoProvider.getBudweiserDto();
+        budweiserDtoUpdated.setName("BUDWEISER UPDATED");
 
-    when(productRepository.findByProductId(BUDWEISER_ID)).thenReturn(budweiserEntity);
-    when(supplierMapper.supplierEntityToSupplierDto(budweiserEntity.getSupplierEntity()))
-        .thenReturn(budweiserDto.getSupplierDto());
-    when(productMapper.productDtoToProductEntity(budweiserDto)).thenReturn(budweiserEntityUpdated);
-    when(productRepository.save(budweiserEntityUpdated)).thenReturn(budweiserEntityUpdated);
-    when(productMapper.productEntityToProductDto(budweiserEntityUpdated))
-        .thenReturn(budweiserDtoUpdated);
+        when(productRepository.findByProductId(BUDWEISER_ID)).thenReturn(budweiserEntity);
+        when(supplierMapper.supplierEntityToSupplierDto(budweiserEntity.getSupplierEntity()))
+                .thenReturn(budweiserDto.getSupplierDto());
+        when(productMapper.productDtoToProductEntity(budweiserDto)).thenReturn(budweiserEntityUpdated);
+        when(productRepository.save(budweiserEntityUpdated)).thenReturn(budweiserEntityUpdated);
+        when(productMapper.productEntityToProductDto(budweiserEntityUpdated))
+                .thenReturn(budweiserDtoUpdated);
 
-    assertEquals(productService.updateAProduct(BUDWEISER_ID, budweiserDto), budweiserDtoUpdated);
-  }
+        assertEquals(productService.updateAProduct(BUDWEISER_ID, budweiserDto), budweiserDtoUpdated);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveAProduct' is returning the required product as
-   * expected.
-   */
-  @Test
-  public void retrieveAProductGivenAProductIdThatDoesNotExistShouldThrowANotFoundException() {
-    String productId = "FAIL000000";
+    /**
+     * Method responsible for testing if the 'retrieveAProduct' is returning the required product as
+     * expected.
+     */
+    @Test
+    public void retrieveAProductGivenAProductIdThatDoesNotExistShouldThrowANotFoundException() {
+        String productId = "FAIL000000";
 
-    when(productRepository.findByProductId(productId)).thenReturn(null);
+        when(productRepository.findByProductId(productId)).thenReturn(null);
 
-    assertThatThrownBy(() -> productService.retrieveAProduct(false, productId))
-            .isInstanceOf(NotFoundException.class);
-  }
+        assertThatThrownBy(() -> productService.retrieveAProduct(false, productId))
+                .isInstanceOf(NotFoundException.class);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveAProduct' is returning the required product as
-   * expected.
-   */
-  @Test
-  public void retrieveAProductGivenAProductIdShouldReturnARequiredProductId() {
-    String productId = budweiserDto.getProductId();
-    budweiserDto.setSupplierDto(null);
+    /**
+     * Method responsible for testing if the 'retrieveAProduct' is returning the required product as
+     * expected.
+     */
+    @Test
+    public void retrieveAProductGivenAProductIdShouldReturnARequiredProductId() {
+        String productId = budweiserDto.getProductId();
+        budweiserDto.setSupplierDto(null);
 
-    when(productRepository.findByProductId(productId)).thenReturn(budweiserEntity);
+        when(productRepository.findByProductId(productId)).thenReturn(budweiserEntity);
 
-    assertEquals(productService.retrieveAProduct(false, productId), budweiserDto);
-  }
+        assertEquals(productService.retrieveAProduct(false, productId), budweiserDto);
+    }
 
-  /**
-   * Method responsible for testing if the 'addProduct' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void
-      addProductGivenAProductEntityThatAlreadyExistsInDatabaseShouldReturnTheProductThatWasAddedInDatabase() {
-    budweiserDto.getSupplierDto().setName(null);
+    /**
+     * Method responsible for testing if the 'addProduct' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void
+    addProductGivenAProductEntityThatAlreadyExistsInDatabaseShouldReturnTheProductThatWasAddedInDatabase() {
+        budweiserDto.getSupplierDto().setName(null);
 
-    when(productRepository.findByName(budweiserDto.getName())).thenReturn(budweiserEntity);
-    when(productMapper.productEntityToProductDto(budweiserEntity)).thenReturn(budweiserDto);
+        when(productRepository.findByName(budweiserDto.getName())).thenReturn(budweiserEntity);
+        when(productMapper.productEntityToProductDto(budweiserEntity)).thenReturn(budweiserDto);
 
-    assertEquals(productService.addProduct(budweiserDto), budweiserDto);
-  }
+        assertEquals(productService.addProduct(budweiserDto), budweiserDto);
+    }
 
-  /**
-   * Method responsible for testing if the 'addProduct' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void addProductGivenAProductDtoShouldReturnTheProductThatWasAddedInDatabase() {
-    budweiserDto.getSupplierDto().setName(null);
-    budweiserDto.setProductId(null);
+    /**
+     * Method responsible for testing if the 'addProduct' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void addProductGivenAProductDtoShouldReturnTheProductThatWasAddedInDatabase() {
+        budweiserDto.getSupplierDto().setName(null);
+        budweiserDto.setProductId(null);
 
-    when(productRepository.findByName(budweiserDto.getName())).thenReturn(null);
-    when(productMapper.productDtoToProductEntity(productDtoArgumentCaptor.capture()))
-        .thenReturn(budweiserEntity);
-    when(productRepository.save(budweiserEntity)).thenReturn(budweiserEntity);
+        when(productRepository.findByName(budweiserDto.getName())).thenReturn(null);
+        when(productMapper.productDtoToProductEntity(productDtoArgumentCaptor.capture()))
+                .thenReturn(budweiserEntity);
+        when(productRepository.save(budweiserEntity)).thenReturn(budweiserEntity);
 
-    ProductDto productDto = productService.addProduct(budweiserDto);
+        ProductDto productDto = productService.addProduct(budweiserDto);
 
-    assertEquals(productDto.getSupplierDto(), budweiserDto.getSupplierDto());
-    assertEquals(productDto.getName(), budweiserDto.getName());
-    assertEquals(productDto.getCategory(), budweiserDto.getCategory());
-    assertEquals(productDto.getPrice(), budweiserDto.getPrice());
-    assertTrue(
-        productService
-            .addProduct(productDtoArgumentCaptor.getValue())
-            .getProductId()
-            .contains("PRD"));
-  }
+        assertEquals(productDto.getSupplierDto(), budweiserDto.getSupplierDto());
+        assertEquals(productDto.getName(), budweiserDto.getName());
+        assertEquals(productDto.getCategory(), budweiserDto.getCategory());
+        assertEquals(productDto.getPrice(), budweiserDto.getPrice());
+        assertTrue(
+                productService
+                        .addProduct(productDtoArgumentCaptor.getValue())
+                        .getProductId()
+                        .contains("PRD"));
+    }
 
-  /**
-   * Method responsible for testing if the 'addProduct' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void
-      addProductGivenAProductDtoWithNullSupplierIdShouldReturnTheProductThatWasAddedInDatabase() {
-    budweiserDto.getSupplierDto().setSupplierId(null);
-    budweiserDto.setProductId(null);
+    /**
+     * Method responsible for testing if the 'addProduct' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void
+    addProductGivenAProductDtoWithNullSupplierIdShouldReturnTheProductThatWasAddedInDatabase() {
+        budweiserDto.getSupplierDto().setSupplierId(null);
+        budweiserDto.setProductId(null);
 
-    when(productRepository.findByName(budweiserDto.getName())).thenReturn(null);
-    when(productMapper.productDtoToProductEntity(productDtoArgumentCaptor.capture()))
-        .thenReturn(budweiserEntity);
-    when(productRepository.save(budweiserEntity)).thenReturn(budweiserEntity);
+        when(productRepository.findByName(budweiserDto.getName())).thenReturn(null);
+        when(productMapper.productDtoToProductEntity(productDtoArgumentCaptor.capture()))
+                .thenReturn(budweiserEntity);
+        when(productRepository.save(budweiserEntity)).thenReturn(budweiserEntity);
 
-    ProductDto productDto = productService.addProduct(budweiserDto);
+        ProductDto productDto = productService.addProduct(budweiserDto);
 
-    assertEquals(productDto.getSupplierDto(), budweiserDto.getSupplierDto());
-    assertEquals(productDto.getName(), budweiserDto.getName());
-    assertEquals(productDto.getCategory(), budweiserDto.getCategory());
-    assertEquals(productDto.getPrice(), budweiserDto.getPrice());
-    assertTrue(
-        productService
-            .addProduct(productDtoArgumentCaptor.getValue())
-            .getProductId()
-            .contains("PRD"));
-  }
+        assertEquals(productDto.getSupplierDto(), budweiserDto.getSupplierDto());
+        assertEquals(productDto.getName(), budweiserDto.getName());
+        assertEquals(productDto.getCategory(), budweiserDto.getCategory());
+        assertEquals(productDto.getPrice(), budweiserDto.getPrice());
+        assertTrue(
+                productService
+                        .addProduct(productDtoArgumentCaptor.getValue())
+                        .getProductId()
+                        .contains("PRD"));
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveProducts' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void retrieveProductsGivenAProductNameShouldReturnTheRequiredProduct() {
-    List<ProductDto> productSingletonList = Collections.singletonList(domaineDto);
-    QueryProduct domaineCarneros =
-        QueryProduct.builder().name("DOMAINE CARNEROS").fetchSuppliers(true).build();
+    /**
+     * Method responsible for testing if the 'retrieveProducts' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void retrieveProductsGivenAProductNameShouldReturnTheRequiredProduct() {
+        List<ProductDto> productSingletonList = Collections.singletonList(domaineDto);
+        QueryProduct domaineCarneros =
+                QueryProduct.builder().name("DOMAINE CARNEROS").fetchSuppliers(true).build();
 
-    assertEquals(productService.retrieveProducts(domaineCarneros), productSingletonList);
-  }
+        assertEquals(productService.retrieveProducts(domaineCarneros), productSingletonList);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveProducts' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void retrieveProductsGivenAProductCategoryShouldReturnTheRequiredProduct() {
-    List<ProductDto> productSingletonList = Collections.singletonList(budweiserDto);
-    QueryProduct budweiser =
-        QueryProduct.builder().category(CategoryDto.BEER).fetchSuppliers(true).build();
+    /**
+     * Method responsible for testing if the 'retrieveProducts' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void retrieveProductsGivenAProductCategoryShouldReturnTheRequiredProduct() {
+        List<ProductDto> productSingletonList = Collections.singletonList(budweiserDto);
+        QueryProduct budweiser =
+                QueryProduct.builder().category(CategoryDto.BEER).fetchSuppliers(true).build();
 
-    assertEquals(productService.retrieveProducts(budweiser), productSingletonList);
-  }
+        assertEquals(productService.retrieveProducts(budweiser), productSingletonList);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveProducts' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void retrieveProductsGivenProductsIdsShouldReturnTheRequiredProducts() {
-    List<ProductDto> productDtoList = Arrays.asList(budweiserDto, domaineDto);
-    QueryProduct ids =
-        QueryProduct.builder()
-            .ids(Arrays.asList(domaineDto.getProductId(), budweiserDto.getProductId()))
-            .fetchSuppliers(true)
-            .build();
+    /**
+     * Method responsible for testing if the 'retrieveProducts' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void retrieveProductsGivenProductsIdsShouldReturnTheRequiredProducts() {
+        List<ProductDto> productDtoList = Arrays.asList(budweiserDto, domaineDto);
+        QueryProduct ids =
+                QueryProduct.builder()
+                        .ids(Arrays.asList(domaineDto.getProductId(), budweiserDto.getProductId()))
+                        .fetchSuppliers(true)
+                        .build();
 
-    assertEquals(productService.retrieveProducts(ids), productDtoList);
-  }
+        assertEquals(productService.retrieveProducts(ids), productDtoList);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveProducts' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void retrieveProductsGivenADescPriceSortShouldReturnTheRequiredProducts() {
-    List<ProductDto> productDtoList = Arrays.asList(budweiserDto, domaineDto);
-    QueryProduct ids = QueryProduct.builder().sort("desc.price").fetchSuppliers(false).build();
+    /**
+     * Method responsible for testing if the 'retrieveProducts' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void retrieveProductsGivenADescPriceSortShouldReturnTheRequiredProducts() {
+        List<ProductDto> productDtoList = Arrays.asList(budweiserDto, domaineDto);
+        QueryProduct ids = QueryProduct.builder().sort("desc.price").fetchSuppliers(false).build();
 
-    budweiserDto.setSupplierDto(null);
-    domaineDto.setSupplierDto(null);
+        budweiserDto.setSupplierDto(null);
+        domaineDto.setSupplierDto(null);
 
-    assertEquals(productService.retrieveProducts(ids), productDtoList);
-  }
+        assertEquals(productService.retrieveProducts(ids), productDtoList);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveProducts' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void retrieveProductsGivenAnAscPriceSortShouldReturnTheRequiredProducts() {
-    List<ProductDto> productDtoList = Arrays.asList(domaineDto, budweiserDto);
-    QueryProduct ids = QueryProduct.builder().sort("asc.price").fetchSuppliers(false).build();
+    /**
+     * Method responsible for testing if the 'retrieveProducts' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void retrieveProductsGivenAnAscPriceSortShouldReturnTheRequiredProducts() {
+        List<ProductDto> productDtoList = Arrays.asList(domaineDto, budweiserDto);
+        QueryProduct ids = QueryProduct.builder().sort("asc.price").fetchSuppliers(false).build();
 
-    budweiserDto.setSupplierDto(null);
-    domaineDto.setSupplierDto(null);
+        budweiserDto.setSupplierDto(null);
+        domaineDto.setSupplierDto(null);
 
-    assertEquals(productService.retrieveProducts(ids), productDtoList);
-  }
+        assertEquals(productService.retrieveProducts(ids), productDtoList);
+    }
 
-  /**
-   * Method responsible for testing if the 'retrieveProducts' method is returning the products as
-   * expected.
-   */
-  @Test
-  public void retrieveProductsGivenADescNameSortShouldReturnTheRequiredProducts() {
-    List<ProductDto> productDtoList = Arrays.asList(domaineDto, budweiserDto);
-    QueryProduct ids = QueryProduct.builder().sort("desc.name").fetchSuppliers(false).build();
+    /**
+     * Method responsible for testing if the 'retrieveProducts' method is returning the products as
+     * expected.
+     */
+    @Test
+    public void retrieveProductsGivenADescNameSortShouldReturnTheRequiredProducts() {
+        List<ProductDto> productDtoList = Arrays.asList(domaineDto, budweiserDto);
+        QueryProduct ids = QueryProduct.builder().sort("desc.name").fetchSuppliers(false).build();
 
-    budweiserDto.setSupplierDto(null);
-    domaineDto.setSupplierDto(null);
+        budweiserDto.setSupplierDto(null);
+        domaineDto.setSupplierDto(null);
 
-    assertEquals(productService.retrieveProducts(ids), productDtoList);
-  }
+        assertEquals(productService.retrieveProducts(ids), productDtoList);
+    }
 }

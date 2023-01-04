@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SupplierDto {
-  private static final int MINIMUM_LENGTH = 6;
-  private static final int MAXIMUM_LENGTH = 10;
+    private static final int MINIMUM_LENGTH = 6;
+    private static final int MAXIMUM_LENGTH = 10;
 
-  @NotEmpty
-  @Size(min = MINIMUM_LENGTH, max = MAXIMUM_LENGTH)
-  private String supplierId;
+    @NotEmpty
+    @Size(min = MINIMUM_LENGTH, max = MAXIMUM_LENGTH)
+    private String supplierId;
 
-  private String name;
+    private String name;
 }

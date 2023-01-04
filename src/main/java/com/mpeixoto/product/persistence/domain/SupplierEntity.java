@@ -26,27 +26,27 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 public class SupplierEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
 
-  @Column(unique = true)
-  private String supplierId;
+    @Column(unique = true)
+    private String supplierId;
 
-  private String name;
+    private String name;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    SupplierEntity that = (SupplierEntity) o;
-    return Objects.equals(id, that.id)
-            && Objects.equals(supplierId, that.supplierId)
-            && Objects.equals(name, that.name);
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SupplierEntity that = (SupplierEntity) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(supplierId, that.supplierId)
+                && Objects.equals(name, that.name);
+    }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, supplierId, name);
-  }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, supplierId, name);
+    }
 }

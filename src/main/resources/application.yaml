@@ -3,3 +3,11 @@ management:
     web:
       path-mapping:
         health: "/healthcheck"
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:9080/auth/realms/MicroServices
+                    jwk-set-uri: http://localhost:9080/auth/realms/MicroServices/protocol/openid-connect/certs

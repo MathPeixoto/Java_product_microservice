@@ -1,6 +1,5 @@
 package com.mpeixoto.product;
 
-import com.mpeixoto.security.configuration.SecurityConfigProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -31,15 +30,5 @@ public class MainProduct {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
-    }
-
-    /**
-     * provide a default instance of SecurityConfigProperties class.
-     *
-     * @return SecurityConfigProperties
-     */
-    @Bean
-    public SecurityConfigProperties securityConfigProperties() {
-        return new SecurityConfigProperties();
     }
 }

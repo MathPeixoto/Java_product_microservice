@@ -15,25 +15,25 @@ import org.junit.runners.model.Statement;
  */
 public class ReadFile implements TestRule {
 
-  @Override
-  public Statement apply(Statement statement, Description description) {
-    return statement;
-  }
+    /**
+     * Method responsible for reading the content of a file and returning as a String.
+     *
+     * @param argument path where the file that will be read is
+     * @return The content of the file
+     */
+    public static String readFile(String argument) {
 
-  /**
-   * Method responsible for reading the content of a file and returning as a String.
-   *
-   * @param argument path where the file that will be read is
-   * @return The content of the file
-   */
-  public static String readFile(String argument) {
-
-    try {
-      byte[] bytes = Files.readAllBytes(new File(argument).toPath());
-      return new String(bytes, StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+        try {
+            byte[] bytes = Files.readAllBytes(new File(argument).toPath());
+            return new String(bytes, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-  }
+
+    @Override
+    public Statement apply(Statement statement, Description description) {
+        return statement;
+    }
 }

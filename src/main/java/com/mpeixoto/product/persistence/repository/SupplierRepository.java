@@ -11,19 +11,19 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SupplierRepository extends JpaRepository<SupplierEntity, Integer> {
-  /**
-   * Method responsible for retrieving a supplier given a name.
-   *
-   * @param name Name of the supplier.
-   * @return The founded supplier
-   */
-  SupplierEntity findByName(String name);
+    /**
+     * Method responsible for retrieving a supplier given a name.
+     *
+     * @param name Name of the supplier.
+     * @return The founded supplier
+     */
+    SupplierEntity findByName(String name);
 
-  /**
-   * Method responsible for retrieving a supplier given a supplierId.
-   *
-   * @param supplierId ID of the supplier.
-   * @return The founded supplier
-   */
-  SupplierEntity findBySupplierId(String supplierId);
+    /**
+     * Method responsible for retrieving a supplier given a supplierId.
+     *
+     * @param supplierId ID of the supplier.
+     * @return The founded supplier
+     */
+    SupplierEntity findBySupplierId(String supplierId);
 }

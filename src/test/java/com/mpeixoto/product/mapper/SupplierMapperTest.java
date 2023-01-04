@@ -15,28 +15,34 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SupplierMapperTest {
-  private SupplierMapper supplierMapper;
+    private SupplierMapper supplierMapper;
 
-  /** Method responsible for setting everything up before each test. */
-  @Before
-  public void setUp() {
-    supplierMapper = new SupplierMapper();
-  }
+    /**
+     * Method responsible for setting everything up before each test.
+     */
+    @Before
+    public void setUp() {
+        supplierMapper = new SupplierMapper();
+    }
 
-  /** Method responsible for testing the supplierEntityToSupplierDto given a supplierEntity. */
-  @Test
-  public void supplierEntityToSupplierDtoGivenASupplierEntityShouldReturnASupplierDto() {
-    assertEquals(
-        supplierMapper.supplierEntityToSupplierDto(
-            PojoProvider.getBudweiserEntity().getSupplierEntity()),
-        PojoProvider.getBudweiserDto().getSupplierDto());
-  }
+    /**
+     * Method responsible for testing the supplierEntityToSupplierDto given a supplierEntity.
+     */
+    @Test
+    public void supplierEntityToSupplierDtoGivenASupplierEntityShouldReturnASupplierDto() {
+        assertEquals(
+                supplierMapper.supplierEntityToSupplierDto(
+                        PojoProvider.getBudweiserEntity().getSupplierEntity()),
+                PojoProvider.getBudweiserDto().getSupplierDto());
+    }
 
-  /** Method responsible for testing the supplierDtoToSupplierEntity given a supplierDto. */
-  @Test
-  public void supplierDtoToSupplierEntityGivenASupplierDtoShouldReturnASupplierEntity() {
-    assertEquals(
-        supplierMapper.supplierDtoToSupplierEntity(PojoProvider.getBudweiserDto().getSupplierDto()),
-        PojoProvider.getBudweiserEntity().getSupplierEntity());
-  }
+    /**
+     * Method responsible for testing the supplierDtoToSupplierEntity given a supplierDto.
+     */
+    @Test
+    public void supplierDtoToSupplierEntityGivenASupplierDtoShouldReturnASupplierEntity() {
+        assertEquals(
+                supplierMapper.supplierDtoToSupplierEntity(PojoProvider.getBudweiserDto().getSupplierDto()),
+                PojoProvider.getBudweiserEntity().getSupplierEntity());
+    }
 }

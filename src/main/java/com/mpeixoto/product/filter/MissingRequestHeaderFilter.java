@@ -1,6 +1,5 @@
 package com.mpeixoto.product.filter;
 
-import com.mpeixoto.product.web.model.StandardError;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +10,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.MDC;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,17 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Order(1)
 @Log4j2
 public class MissingRequestHeaderFilter extends OncePerRequestFilter {
-    private final JsonOperations jsonOperations;
     private static final String CORRELATION_ID = "X-Correlation-Id";
-
-    /**
-     * Method responsible for setting the beans.
-     *
-     * @param jsonOperations Type: JsonOperations
-     */
-    public MissingRequestHeaderFilter(JsonOperations jsonOperations) {
-        this.jsonOperations = jsonOperations;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -48,19 +36,6 @@ public class MissingRequestHeaderFilter extends OncePerRequestFilter {
             MDC.put(CORRELATION_ID, requestCorrelationId);
         }
 
-        if (!Strings.isBlank(requestCorrelationId)) {
-            filterChain.doFilter(request, response);
-        } else {
-            log.error(
-                    "Correlation id {} sent a request missing parameters", request.getHeader(CORRELATION_ID));
-            StandardError error =
-                    StandardError.builder()
-                            .status(400)
-                            .message("Missing required request parameters")
-                            .build();
-
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.getWriter().write(jsonOperations.parseToJson(error));
-        }
+        filterChain.doFilter(request, response);
     }
 }

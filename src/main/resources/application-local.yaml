@@ -26,17 +26,5 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5Dialect
 
-microservice:
-  security:
-    host: "http://security-module.tmgbr"
-    port: ""
-    authorization:
-      requiredScope: "MS.product"
-    authentication:
-      username: ""
-      password: ""
-      clientId: ""
-      clientSecret: ""
-
 server:
   port: 8080
