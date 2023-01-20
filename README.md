@@ -1,17 +1,44 @@
-# product-ms
-Microservice responsible for the product actions, such as,
-add or remove a product from database and retrieve its products based on a requirement.
+# Product Microservice
+This microservice is a Java 17 and Spring Boot 3 application that provides REST endpoints for managing products in a MySQL database. It also utilizes Keycloak for identity and access management.
 
-In order to run this service, you should go into target folder and run the following code:
-`java -jar product-ms-0.0.1-SNAPSHOT.jar`
+## Getting Started
+Install Docker and Docker Compose on your machine.
 
-As long as the service is up, you'll be able to send any request to its endpoints
+Clone this repository and navigate to the root directory.
 
-## Alternatives
-If you want to test this project without setting your environment, you can use docker. Just run these steps:
+Build the Docker image by running:
 
-1 - This will create a docker image of the application
-`mvn spring-boot:build-image`
+`docker-compose build`
+Start the service by running:
 
-2- And this one to up a container and set up the mysql database:
-`docker compose up`
+`docker-compose up`
+The service will be running at http://localhost:8080
+
+
+## Endpoints
+GET /v1/products/: Retrieve a list of products
+GET /v1/products/{product-id}: Retrieve a product
+POST /v1/products: Add a new product
+PUT /v1/products/{product-id}: Update a product
+
+
+## Keycloak Setup
+1. Start the Keycloak server by running:
+`docker-compose up`
+The Keycloak server will be running at http://localhost:9080
+
+2. Create a new realm and client for the microservice.
+
+3. Configure the client with the appropriate permissions for the endpoints.
+
+4. Update the application.properties file with the Keycloak configuration.
+
+## Database
+This microservice uses a MySQL database. The database is automatically set up and seeded with data when the service is started.
+
+## Contributing
+Fork the repository
+Create your feature branch (git checkout -b my-new-feature)
+Commit your changes (git commit -am 'Add some feature')
+Push to the branch (git push origin my-new-feature)
+Create a new Pull Request
